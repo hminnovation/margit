@@ -152,10 +152,46 @@ async function handleArguments(options: CommandOptions) {
   let remoteUrl = "";
 
   try {
+    // Check if this is a git repo
+    execSync("git rev-parse --is-inside-work-tree", { stdio: "ignore" });
+  } catch (error) {
+    console.log(
+      chalk.inverse(
+        "\nLooks like this folder isn't a git repository yet.\nAsk `margit 'Set-up git repo'` if you need some guidance.\nOr simply run `git init`"
+      )
+    );
+    console.error("");
+    return; // exit the function
+  }
+
+  // If we're here, it's a git repo
+  try {
     branch = execSync("git rev-parse --abbrev-ref HEAD", { stdio: "ignore" })
       ?.toString()
       ?.trim();
+  } catch (error) {
+    console.log(
+      chalk.inverse(
+        "\nThere is no branch created yet. You might want to create a branch by running `git checkout -b <branch-name>`"
+      )
+    );
+    console.error("");
+    return;
+  }
+
+  try {
     status = execSync("git status", { stdio: "ignore" })?.toString()?.trim();
+  } catch (error) {
+    console.log(
+      chalk.inverse(
+        "\nThere was a problem retrieving the status of your Git repository."
+      )
+    );
+    console.error("");
+    return;
+  }
+
+  try {
     remoteUrl = execSync("git config --get remote.origin.url", {
       stdio: "ignore",
     })
@@ -164,10 +200,11 @@ async function handleArguments(options: CommandOptions) {
   } catch (error) {
     console.log(
       chalk.inverse(
-        "Looks like this folder isn't a git folder yet.\nAsk `margit 'Set-up git repo'` if you need some guidance.\nOr simply run `git init`"
+        "\nThere is no remote URL set for this repository. You might want to add a remote by running `git remote add origin <remote-url>`"
       )
     );
     console.error("");
+    return;
   }
 
   if (options.dummy) {
