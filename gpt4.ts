@@ -172,7 +172,7 @@ async function handleArguments(options: CommandOptions) {
   } catch (error) {
     console.log(
       chalk.inverse(
-        "\nThere is no branch created yet. You might want to create a branch by running `git checkout -b <branch-name>`"
+        "\nThere is no branch created yet. You might want to create a branch by asking margit or by running `git checkout -b <branch-name>`"
       )
     );
     console.error("");
@@ -200,7 +200,7 @@ async function handleArguments(options: CommandOptions) {
   } catch (error) {
     console.log(
       chalk.inverse(
-        "\nThere is no remote URL set for this repository. You might want to add a remote by running `git remote add origin <remote-url>`"
+        "\nThere is no remote URL set for this repository. You might want to add a remote by running `git remote add origin <your-remote-url>`"
       )
     );
     console.error("");
